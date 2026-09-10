@@ -6,9 +6,13 @@ class Player {
     this.x = this.game.width * 0.5 - this.width * 0.5;
     this.y = this.game.height - this.height;
     this.speed = 5;
+    this.lives = 3;
+    this.image = document.getElementById('playerImage');
   }
   draw(context) {
-    context.fillRect(this.x, this.y, this.width, this.height);
+    //context.fillRect(this.x, this.y, this.width, this.height);
+    context.drawImage(this.image, this.x, this.y, this.width, this.height);
+
   }
   update() {
     // movimento do player na horizontal
@@ -22,6 +26,11 @@ class Player {
   shoot(){
     const projectile = this.game.getProjectile();
     if (projectile) projectile.start(this.x + this.width * 0.5, this.y);
+  }
+  restart(){
+    this.x = this.game.width * 0.5 - this.width * 0.5;
+    this.y = this.game.height - this.height;
+    this.lives = 3;
   }
 }
 
@@ -67,7 +76,8 @@ class Enemy {
         this.markedForDeletion = false;
     }
     draw(context){
-        context.strokeRect(this.x, this.y, this.width, this.height);
+        //context.strokeRect(this.x, this.y, this.width, this.height);
+        context.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
     update(x, y){
       this.x = x + this.positionX;
@@ -76,16 +86,29 @@ class Enemy {
         if (!projectile.free && this.game.checkCollision(this, projectile)){
           this.markedForDeletion = true;
           projectile.reset();
-          this.game.score++;
+          if (!this.game.gameOver) this.game.score++;
         }
       });
-
+      // checar colsao inimigo - player
+      if (this.game.checkCollision(this, this.game.player)){
+        this.markedForDeletion = true;
+        if (!this.game.gameOver && this.game.score > 0) this.game.score--;
+        this.game.player.lives--;
+        if(this.game.player.lives < 1) this.game.gameOver = true;
+      }
       // derrota
       if (this.y + this.height > this.game.height){
         this.game.gameOver = true;
         this.markedForDeletion = true;
       }
     }
+}
+
+class Inimigo1 extends Enemy {
+  constructor(game, positionX, positionY){
+    super(game, positionX, positionY);
+    this.image = document.getElementById('inimigo1');
+  }
 }
 
 class Wave{
@@ -122,7 +145,7 @@ class Wave{
         for (let x = 0; x < this.game.columns; x++){
           let enemyX = x * this.game.enemySize;
           let enemyY = y * this.game.enemySize;
-          this.enemies.push(new Enemy(this.game, enemyX, enemyY));
+          this.enemies.push(new Inimigo1(this.game, enemyX, enemyY));
         }
       }
     }
@@ -139,9 +162,10 @@ class Game {
     this.projectilesPool = [];
     this.numberOfProjectiles = 10;
     this.createProjectiles();
+    this.fired = false;
 
-    this.columns = 5;
-    this.rows = 5;
+    this.columns = 2;
+    this.rows = 2;
     this.enemySize = 60;
 
     this.waves = [];
@@ -151,11 +175,16 @@ class Game {
     this.score = 0;
     this.gameOver = false;
 
+    //comandos de pressionar botoes
     window.addEventListener("keydown", (e) => {
       if (this.keys.indexOf(e.key) === -1) this.keys.push(e.key);
-      if (e.key === '1') this.player.shoot();
+      if (e.key === ' ' && !this.fired) this.player.shoot();
+      this.fired = true;
+      if (e.key === 'r' && this.gameOver) this.restart();
+      if (e.key === 'R' && this.gameOver) this.restart();
     });
     window.addEventListener("keyup", (e) => {
+      this.fired = false;
       const index = this.keys.indexOf(e.key);
       if (index > -1) this.keys.splice(index, 1);
     });
@@ -174,6 +203,7 @@ class Game {
           this.newWave();
           this.waveCount++;
           wave.nextWaveTrigger = true;
+          this.player.lives++;
         }
     })
 
@@ -205,12 +235,18 @@ class Game {
     context.shadowOffsetX = 2;
     context.shadowOffsetY = 2;
     context.shadowColor = "black";
-    context.fillText("Wave: " +this.waveCount, 20, 80);
+    context.fillText("Wave: " + this.waveCount, 20, 80);
     context.fillText("Score: " + this.score, 20, 40);
+    // barra de vida
+    for (let i= 0; i < this.player.lives; i++){
+      context.fillRect(25 +10 * i,100,5,20)
+    }
     if (this.gameOver){
       context.textAlign = "center";
       context.font = '95px Impact';
       context.fillText('GAME OVER!', this.width * 0.5, this.height * 0.5);
+      context.font = '20px Impact';
+      context.fillText('Aperte R para o restart!', this.width * 0.5, this.height * 0.5 + 30);
     }
     context.restore();
   }
@@ -221,6 +257,17 @@ class Game {
       this.rows++;
     }
     this.waves.push(new Wave(this));
+  }
+  restart(){
+    this.player.restart();
+    this.columns = 2;
+    this.rows = 2;
+    this.enemySize = 60;
+    this.waves = [];
+    this.waves.push(new Wave(this));
+    this.waveCount = 1;
+    this.score = 0;
+    this.gameOver = false;
   }
 }
 

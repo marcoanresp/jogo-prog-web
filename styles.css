@@ -1,8 +1,50 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background-color: #02030d;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+#gameContainer {
+  width: min(600px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 16px 0 32px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+#gameLogo {
+  display: block;
+  width: min(400px, 100%);
+  height: auto;
+}
+
 #canvas1 {
-    border: 5px solid black;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    translate: -50% -50%;
-    background: url("assets/background.png");
+  display: block;
+  width: 100%;
+  height: auto;
+
+  border: 5px solid black;
+  background: url("assets/background.png") center / cover;
+}
+
+#gameInfo {
+  width: 100%;
+  text-align: center;
+}
+
+#gameInfo p {
+  margin: 8px 0;
 }

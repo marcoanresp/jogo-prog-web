@@ -1,32 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, inicial-scale=1.0">
-        <title>Star Walker</title>
-        <link rel="stylesheet" href="styles.css">
-        <link rel="shortcut icon" type="image/png" href="assets/logo.png">
-    </head>
-    <body>      
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    >
 
-        <canvas id="canvas1"></canvas>
-            
-            
+    <title>Star Walker</title>
+
+    <link rel="stylesheet" href="styles.css">
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="assets/logo.png"
+    >
+  </head>
+
+  <body>
+    <main id="gameContainer">
+      <img
+        id="gameLogo"
+        src="assets/logo.png"
+        alt="Logo do jogo Star Walker"
+      >
+
+      <canvas
+        id="canvas1"
+        width="600"
+        height="800"
+      >
+        Seu navegador não suporta o elemento canvas.
+      </canvas>
+
+      <section id="gameInfo">
+        <p>
+          Caso queira saber mais sobre esse estilo de jogo, visite a
+          <a
+            href="https://en.wikipedia.org/wiki/Space_Invaders"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Wikipedia
+          </a>.
+        </p>
+
+        <p>
+          Tutorial consultado:
+          <a
+            href="https://www.youtube.com/watch?v=cuudnyDyWGE&t=5937s"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            YouTube
+          </a>.
+        </p>
+
+        <p><strong>Desenvolvido por:</strong> Marco Antonio R. E.</p>
+        <p><strong>Copyright:</strong> 2026</p>
+      </section>
+    </main>
+
+    <!-- Imagens carregadas para serem utilizadas pelo canvas -->
+    <img
+      src="assets/enemy-assault.png"
+      id="inimigo1"
+      alt=""
+      hidden
+    >
+
+    <img
+      src="assets/player-ship.png"
+      id="playerImage"
+      alt=""
+      hidden
+    >
 
     <script src="script.js"></script>
-
-    </body>
-    <footer>
-                    <p>
-                Caso queira saber mais sobre esse estilo de jogo veja
-                <a href="https://en.wikipedia.org/wiki/Space_Invaders" target="_blank">Wikipedia</a>
-            </p>
-            <p>
-                Tutorial consultado:
-                <a href="https://www.youtube.com/watch?v=cuudnyDyWGE&t=5937s" target="_blank">Youtube</a>
-            </p>
-            <p><b>Desenvolvido por:</b> Marco Antonio R. E.</p>
-            <p><b>Copyright:</b> 2026</p>
-    </footer>
+  </body>
 </html>
